@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Form Submit Bug!</title>
+    <script src="build/react.js"></script>
+    <script src="build/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+  </head>
+  <body>
+    <div id="example"></div>
+    <script type="text/babel">
+
+      class Form extends React.Component {
+        handleSubmit(e) {
+          e.preventDefault();
+          alert('submit!');
+        }
+
+        submitForm(e) {
+          e.preventDefault();
+          this._form.submit();
+        }
+
+        render() {
+          return (
+            <form onSubmit={this.handleSubmit} ref={(f) => {this._form = f;}}>
+              <input type="text" name="sample" />
+              <button type="button" onClick={this.submitForm.bind(this)}>Submit</button>
+            </form>
+          );
+        }
+      }
+
+      ReactDOM.render(
+        <Form />,
+        document.getElementById('example')
+      );
+    </script>
+  </body>
+</html>
