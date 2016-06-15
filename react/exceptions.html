@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Broken Exceptions</title>
+  </head>
+  <body>
+    <div id="container"></div>
+    <div id="container2"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.24/browser.min.js"></script>
+    <script type="text/babel">
+      var BrokenButton = React.createClass({
+        handleClick: function() {
+          throw new Error('busted button');
+        },
+        render: function() {
+          return <button onClick={this.handleClick}>This is a broken button (exception obfuscated)</button>;
+        }
+      });
+      ReactDOM.render(
+        <BrokenButton />,
+        document.getElementById('container')
+      );
+    </script>
+    <script>
+      var OtherBrokenButton = React.createClass({
+        handleClick: function() {
+          throw new Error('busted button');
+        },
+        render: function() {
+          return React.createElement('button', {
+            onClick: this.handleClick
+          }, 'This is another broken button (expected exception)');
+        }
+      });
+      ReactDOM.render(
+        React.createElement(OtherBrokenButton),
+        document.getElementById('container2')
+      );
+    </script>
+    <script>
+      window.onerror = function(message, source, lineno, colno, error) {
+        console.log('onerror!', arguments);
+      }
+    </script>
+  </body>
+</html>
